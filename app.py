@@ -1,8 +1,3 @@
-"""
-PyQt5 GUI: 피스타치오 이미지 분류기
-실행: python app.py
-"""
-
 import sys
 import os
 import numpy as np
