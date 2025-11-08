@@ -1,14 +1,3 @@
-"""
-Deep Learning/Cloud Term Project - Part 1
-CNN 모델 개발: 피스타치오 이미지 분류 (Kirmizi vs Siirt)
-
-요구사항:
-- 전이학습(Transfer Learning) 사용 금지
-- random_state=123으로 train/test 분할 (7:3)
-- 학습곡선 그래프 저장
-- Train/Test accuracy 출력
-"""
-
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -26,9 +15,7 @@ print("="*60)
 print("피스타치오 CNN 분류 모델 학습 시작")
 print("="*60)
 
-# ========================================
 # 1. 데이터 로딩 및 전처리
-# ========================================
 print("\n[1단계] 데이터 로딩 중...")
 
 # 데이터셋 경로
@@ -95,9 +82,9 @@ print("데이터 정규화 완료 (0~1 범위)")
 y_categorical = to_categorical(y, num_classes=2)
 print(f"라벨 인코딩 완료: {y_categorical.shape}")
 
-# ========================================
+
 # 2. 데이터 분할 (Train:Test = 7:3)
-# ========================================
+
 print("\n[2단계] 데이터 분할 중...")
 print("※ 프로젝트 요구사항: random_state=123, test_size=0.3")
 
@@ -113,9 +100,9 @@ print(f"Test 데이터: {X_test.shape[0]}개")
 print(f"Train 비율: {X_train.shape[0]/len(X)*100:.1f}%")
 print(f"Test 비율: {X_test.shape[0]/len(X)*100:.1f}%")
 
-# ========================================
+
 # 3. CNN 모델 구축 (전이학습 사용 안 함!)
-# ========================================
+
 print("\n[3단계] CNN 모델 구축 중...")
 print("※ 전이학습(Transfer Learning) 사용 금지 - 직접 CNN 구축")
 
@@ -167,9 +154,9 @@ model.compile(
 print("\n모델 구조:")
 model.summary()
 
-# ========================================
+
 # 4. 이미지 증강 (Image Augmentation)
-# ========================================
+
 print("\n[4단계] 이미지 증강 설정 중...")
 print("※ Chapter 10-2 참고: 성능 향상을 위한 데이터 증강")
 
@@ -189,9 +176,9 @@ val_datagen = ImageDataGenerator()
 
 print("이미지 증강 설정 완료")
 
-# ========================================
+
 # 5. 콜백 함수 설정
-# ========================================
+
 print("\n[5단계] 학습 콜백 설정 중...")
 
 callbacks = [
@@ -218,9 +205,9 @@ callbacks = [
 
 print("콜백 설정 완료")
 
-# ========================================
+
 # 6. 모델 학습
-# ========================================
+
 print("\n[6단계] 모델 학습 시작...")
 print("="*60)
 
@@ -248,9 +235,9 @@ history = model.fit(
 training_time = time.time() - start_time
 print(f"\n학습 완료! 소요 시간: {training_time/60:.2f}분")
 
-# ========================================
+
 # 7. 모델 평가 (프로젝트 필수 요구사항)
-# ========================================
+
 print("\n[7단계] 모델 평가")
 print("="*60)
 
@@ -266,9 +253,9 @@ print(f"Test Accuracy: {test_acc:.4f} ({test_acc*100:.2f}%)")
 
 print("="*60)
 
-# ========================================
-# 8. 학습곡선 그래프 저장 (프로젝트 필수 요구사항)
-# ========================================
+
+# 8. 학습곡선 그래프 저장
+
 print("\n[8단계] 학습곡선 그래프 생성 중...")
 
 plt.figure(figsize=(14, 5))
@@ -297,18 +284,18 @@ plt.tight_layout()
 plt.savefig('training_history.png', dpi=300, bbox_inches='tight')
 print("학습곡선 그래프 저장 완료: training_history.png")
 
-# ========================================
+
 # 9. 최종 모델 저장
-# ========================================
+
 print("\n[9단계] 최종 모델 저장 중...")
 
 model.save('pistachio_cnn_model.h5')
 print("모델 저장 완료: pistachio_cnn_model.h5")
 print("※ Part 2 UI에서 이 모델을 로드하여 사용합니다.")
 
-# ========================================
+
 # 10. 결과 요약
-# ========================================
+
 print("\n" + "="*60)
 print("학습 결과 요약")
 print("="*60)
@@ -318,29 +305,3 @@ print(f"Train Accuracy: {train_acc*100:.2f}%")
 print(f"Test Accuracy: {test_acc*100:.2f}%")
 print(f"Accuracy 차이: {abs(train_acc - test_acc)*100:.2f}%")
 print("="*60)
-
-# 결과를 텍스트 파일로 저장
-with open('training_results.txt', 'w', encoding='utf-8') as f:
-    f.write("="*60 + "\n")
-    f.write("피스타치오 CNN 분류 모델 학습 결과\n")
-    f.write("="*60 + "\n\n")
-    f.write(f"총 데이터: {len(X)}개\n")
-    f.write(f"  - Kirmizi: {len(kirmizi_images)}개\n")
-    f.write(f"  - Siirt: {len(siirt_images)}개\n\n")
-    f.write(f"Train 데이터: {X_train.shape[0]}개 (70%)\n")
-    f.write(f"Test 데이터: {X_test.shape[0]}개 (30%)\n")
-    f.write(f"Random State: 123 (프로젝트 요구사항)\n\n")
-    f.write(f"총 에폭: {len(history.history['loss'])}\n")
-    f.write(f"학습 시간: {training_time/60:.2f}분\n\n")
-    f.write(f"Train Loss: {train_loss:.4f}\n")
-    f.write(f"Train Accuracy: {train_acc:.4f} ({train_acc*100:.2f}%)\n\n")
-    f.write(f"Test Loss: {test_loss:.4f}\n")
-    f.write(f"Test Accuracy: {test_acc:.4f} ({test_acc*100:.2f}%)\n\n")
-    f.write("생성된 파일:\n")
-    f.write("  - pistachio_cnn_model.h5 (학습된 모델)\n")
-    f.write("  - training_history.png (학습곡선 그래프)\n")
-    f.write("  - training_results.txt (이 파일)\n")
-    f.write("\n" + "="*60 + "\n")
-
-print("\n학습 결과가 'training_results.txt'에 저장되었습니다.")
-print("\n프로젝트 완료! Part 2 (UI 개발)로 진행하세요.")
